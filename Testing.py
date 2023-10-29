@@ -1,10 +1,12 @@
 from DataManager import *
 from Tree import *
     
-A1 = {}
-NumericDivisionCount = 2
-ExtractData(A1,1,NumericDivisionCount)
 
+Root = CreateTree(TrainSet)
+
+PrintTree(Root)
+
+"""
 
 for a in A1.keys():
     print("\n")  
@@ -13,7 +15,7 @@ for a in A1.keys():
 print("\nInfoGain is ",InformationGain(A1))   
 
 
-"""
+
 PrintData(A1["a"])
 
 PrintData(A1["b"])

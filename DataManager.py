@@ -72,8 +72,7 @@ def ExtractData(Dict,Column,NumericDivision):
             Dict[at.name] = at    
 
             DivCount+=1
-
-       
+      
         
 
 def Entropy(attr:Attr):
