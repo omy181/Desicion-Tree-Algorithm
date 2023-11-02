@@ -6,11 +6,13 @@ TrainSet = pd.read_csv("trainSet.csv")
 def IsNearPure(Data):
     PurenessThreshold = 0.9
 
-    _ ,counts = numpy.unique(Data[:,-1],return_counts=True)
+    classes ,counts = numpy.unique(Data[:,-1],return_counts=True)
 
     pureness = counts[0]/sum(counts)
+
+    mostfrequent = classes[numpy.argmax(counts)]
    
-    return  pureness > PurenessThreshold
+    return  pureness > PurenessThreshold , mostfrequent
 
 def GetPossibleSplits(Data):
 
@@ -21,7 +23,12 @@ def GetPossibleSplits(Data):
 
         if isinstance(classes[0],str):
             # Classification data
-            split_columns[column] = classes        
+
+            arr = []
+            for i in range(len(classes)) :
+                arr.append(i)
+
+            split_columns[column] = arr
             
         else:
             # Numerical data
@@ -40,8 +47,37 @@ def CalculateEntropy(Data):
     
     return sum(p * (-numpy.log2(p)))
 
-def FindLowestEntropy():
-    return
+def FindLowestEntropySplit(Data,split_columns):
+
+    LowestEntropy = CalculateEntropy(Data)
+    LowestEntropyAbove = None
+    LowestEntropyBellow = None
+    Split_Column = 0
+    Split_Value = 0
+
+    for i in range(0,len(Data[0])-1):
+        for a in split_columns[i]:
+            
+            above,bellow = Split(Data,i,a)
+
+            e_above = CalculateEntropy(above.to_numpy())
+            e_bellow = CalculateEntropy(bellow.to_numpy())
+
+            p_above = len(above)/ (len(above)+len(bellow))
+            p_bellow = len(bellow)/ (len(above)+len(bellow))
+
+            e_overall = p_above * e_above + p_bellow * e_bellow
+
+            if e_overall <= LowestEntropy:
+                LowestEntropy = e_overall
+                LowestEntropyAbove = above
+                LowestEntropyBellow = bellow
+                Split_Column = i
+                Split_Value = a
+
+
+    return LowestEntropyAbove,LowestEntropyBellow,Split_Column,Split_Value
+
 
 def Split(Data,Split_Column,Split_Value):
 
