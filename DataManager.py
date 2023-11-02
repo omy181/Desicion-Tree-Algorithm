@@ -2,9 +2,12 @@ import pandas as pd
 import numpy as numpy
  
 TrainSet = pd.read_csv("trainSet.csv")
+TestSet = pd.read_csv("testSet.csv")
 
-def IsNearPure(Data):
-    PurenessThreshold = 0.9
+#TrainSet = pd.read_csv("Iris.csv")
+#TrainSet = TrainSet.drop("Id", axis=1)
+
+def IsNearPure(Data,PurenessThreshold):
 
     classes ,counts = numpy.unique(Data[:,-1],return_counts=True)
 
@@ -60,8 +63,8 @@ def FindLowestEntropySplit(Data,split_columns):
             
             above,bellow = Split(Data,i,a)
 
-            e_above = CalculateEntropy(above.to_numpy())
-            e_bellow = CalculateEntropy(bellow.to_numpy())
+            e_above = CalculateEntropy(above)
+            e_bellow = CalculateEntropy(bellow)
 
             p_above = len(above)/ (len(above)+len(bellow))
             p_bellow = len(bellow)/ (len(above)+len(bellow))
@@ -85,16 +88,15 @@ def Split(Data,Split_Column,Split_Value):
 
     column_values = Data[:,Split_Column]
 
-
     if isinstance(classes[0],str):
         # for Categorical
-        above = TrainSet[classes[Split_Value] == column_values]
-        bellow = TrainSet[classes[Split_Value] != column_values]
+        above = Data[classes[Split_Value] == column_values]
+        bellow = Data[classes[Split_Value] != column_values]
 
     else:
         # for Numerical
-        above = TrainSet[Split_Value >= column_values]
-        bellow = TrainSet[Split_Value < column_values]    
+        above = Data[Split_Value >= column_values]
+        bellow = Data[Split_Value < column_values]    
 
     return above,bellow
 
