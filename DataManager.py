@@ -4,7 +4,6 @@ import numpy as numpy
 TrainSet = pd.read_csv("trainSet.csv")
 TestSet = pd.read_csv("testSet.csv")
 
-#TrainSet = pd.read_csv("Iris.csv")
 #TrainSet = TrainSet.drop("Id", axis=1)
 
 def IsNearPure(Data,PurenessThreshold):
@@ -21,11 +20,13 @@ def GetPossibleSplits(Data):
 
     split_columns = {}
 
-    for column in range( (len(TrainSet.columns)-1)):
+    _,column_count = Data.shape
+
+    for column in range( column_count-1):
         classes = numpy.unique(Data[:,column])
 
         if isinstance(classes[0],str):
-            # Classification data
+            # Categorical data
 
             arr = []
             for i in range(len(classes)) :
@@ -100,3 +101,10 @@ def Split(Data,Split_Column,Split_Value):
 
     return above,bellow
 
+
+def RemoveData(Data,ColumnstoRemove):
+
+    for column in ColumnstoRemove:
+        Data = Data.drop(column, axis=1)
+
+    return Data

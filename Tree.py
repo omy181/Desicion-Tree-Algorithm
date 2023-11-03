@@ -1,10 +1,12 @@
 from DataManager import *
 
-def CreateTree(Data,PurenessThreshold,DepthLimit,Depth = 0):
+def CreateTree(Data,WholeData,PurenessThreshold,DepthLimit,Depth = 0):
 
     ispure,label = IsNearPure(Data,PurenessThreshold)
 
-    if ispure or (DepthLimit != 0 and Depth >= DepthLimit):       
+    if ispure or (DepthLimit != 0 and Depth >= DepthLimit):      
+        if Depth == 0:           
+            print("\n\n\nImpurity is too low!\n\n\n") 
         return label
 
     possiblesplits = GetPossibleSplits(Data)
@@ -13,22 +15,23 @@ def CreateTree(Data,PurenessThreshold,DepthLimit,Depth = 0):
 
 
     classes = numpy.unique(Data[:,Split_Column])
-  
+
+    
 
     Condition = ""
 
     if isinstance(classes[0],str):
         # for Categorical
-        Condition = TrainSet.columns[Split_Column] + " != " + classes[Split_Value]
+        Condition = WholeData.columns[Split_Column] + " != " + classes[Split_Value]
 
     else:
         # for Numerical
-        Condition = TrainSet.columns[Split_Column] + " <= " + str(Split_Value)
+        Condition = WholeData.columns[Split_Column] + " <= " + str(Split_Value)
         
     Tree_Structure = {Condition:[]}
     
-    yes_answer = CreateTree(LowestEntropyAbove,PurenessThreshold,DepthLimit,Depth+1)
-    no_answer = CreateTree(LowestEntropyBellow,PurenessThreshold,DepthLimit,Depth+1)
+    yes_answer = CreateTree(LowestEntropyAbove,WholeData,PurenessThreshold,DepthLimit,Depth+1)
+    no_answer = CreateTree(LowestEntropyBellow,WholeData,PurenessThreshold,DepthLimit,Depth+1)
 
     Tree_Structure[Condition].append(yes_answer)
     Tree_Structure[Condition].append(no_answer)
@@ -89,9 +92,8 @@ def AskQuestionToAll(Tree_Structure,Data,Positive):
             else:
                 FN += 1
 
-    ShowStatistics(TP,TN,FP,FN)
 
-    return 
+    return TP,TN,FP,FN
 
 
 def ShowStatistics(TP,TN,FP,FN):
