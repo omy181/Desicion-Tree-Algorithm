@@ -8,11 +8,16 @@ TestSet = pd.read_csv("testSet.csv")
 
 def IsNearPure(Data,PurenessThreshold):
 
+    DataLimit = 2
+
     classes ,counts = numpy.unique(Data[:,-1],return_counts=True)
 
     pureness = counts[0]/sum(counts)
 
     mostfrequent = classes[numpy.argmax(counts)]
+
+    if sum(counts) <= DataLimit:
+        pureness = 1
    
     return  pureness > PurenessThreshold , mostfrequent
 
@@ -108,3 +113,4 @@ def RemoveData(Data,ColumnstoRemove):
         Data = Data.drop(column, axis=1)
 
     return Data
+

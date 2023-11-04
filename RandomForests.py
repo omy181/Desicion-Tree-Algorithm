@@ -1,6 +1,6 @@
 from DataManager import *
 from Tree import *
-
+import math as math
 
 def CreateForest(TrainData,TestData,RemoveDataCollection,PurenessThreshold,DepthLimit,Positive):
 
@@ -9,21 +9,23 @@ def CreateForest(TrainData,TestData,RemoveDataCollection,PurenessThreshold,Depth
     FP = 0
     FN = 0
 
-    # for every question tree is constructed again and again
-    # question loop should be inside tree loop
 
+    # Create Trees
+    Trees = []
+    for datatoremove in RemoveDataCollection:
+        NewData = RemoveData(TrainData,datatoremove)
+        tree = CreateTree(numpy.array(NewData),NewData,PurenessThreshold,DepthLimit)
+        Trees.append(tree)
+
+
+    # Ask Questions
     for question in range(len(TestData)):
-        print("Question",question,"/",len(TestData))
-
         Answers = []
         Truth = TestData.iloc[question][-1]
-        for datatoremove in RemoveDataCollection:
-            NewData = RemoveData(TrainData,datatoremove)
-            tree = CreateTree(numpy.array(NewData),NewData,PurenessThreshold,DepthLimit)
+        for tree in Trees:
             Answers.append(AskQuestion(tree,TestData.iloc[question]))       
         
         Prediction = max(set(Answers),key=Answers.count) # most frequent
-
 
         if Prediction == Positive:
             if Prediction == Truth:
@@ -38,3 +40,20 @@ def CreateForest(TrainData,TestData,RemoveDataCollection,PurenessThreshold,Depth
 
     
     return TP,TN,FP,FN
+
+
+def CreateRandomForestSet(Data,Count):
+
+    Collection = (Data.iloc[:,:-1]).columns
+
+    NewCollection = []
+
+    for i in range(Count):
+        NewCollection.append([])
+
+        j = math.floor(i/len(Collection))
+
+        for k in range(j+2):
+            NewCollection[i%Count].append(Collection[(i%len(Collection) + k)%len(Collection)])
+
+    return NewCollection

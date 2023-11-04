@@ -29,9 +29,18 @@ def CreateTree(Data,WholeData,PurenessThreshold,DepthLimit,Depth = 0):
         Condition = WholeData.columns[Split_Column] + " <= " + str(Split_Value)
         
     Tree_Structure = {Condition:[]}
+
+
+    if len(LowestEntropyAbove) == 0:
+        yes_answer = label
+    else:
+        yes_answer = CreateTree(LowestEntropyAbove,WholeData,PurenessThreshold,DepthLimit,Depth+1)
     
-    yes_answer = CreateTree(LowestEntropyAbove,WholeData,PurenessThreshold,DepthLimit,Depth+1)
-    no_answer = CreateTree(LowestEntropyBellow,WholeData,PurenessThreshold,DepthLimit,Depth+1)
+    if len(LowestEntropyBellow) == 0:
+        no_answer = label
+    else:
+        no_answer = CreateTree(LowestEntropyBellow,WholeData,PurenessThreshold,DepthLimit,Depth+1)
+
 
     Tree_Structure[Condition].append(yes_answer)
     Tree_Structure[Condition].append(no_answer)
@@ -104,14 +113,17 @@ def ShowStatistics(TP,TN,FP,FN):
         Presicion = TP/(FP+TP)
         FScore = 2*(Presicion*TPrate)/(Presicion+TPrate)
 
-        print("Accuracy: ",Accuracy)
-        print("TPrate: ",TPrate)
-        print("FPrate: ",FPrate)
-        print("Presicion: ",Presicion)
-        print("FScore: ",FScore)
+        print("Accuracy: ",Significant(Accuracy))
+        print("TPrate: ",Significant(TPrate))
+        print("FPrate: ",Significant(FPrate))
+        print("Presicion: ",Significant(Presicion))
+        print("FScore: ",Significant(FScore))
         print("Total number of TP: ",TP)
-        print("Total number of TN:: ",TN)
+        print("Total number of TN: ",TN)
         print("Total number of FP: ",FP)
-        print("Total number of FN:: ",FN)
+        print("Total number of FN: ",FN)
 
         return
+
+def Significant(number):
+    return  round(number * 1000)/1000

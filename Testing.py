@@ -4,25 +4,49 @@ from RandomForests import *
 from pprint import *
 
 
-#tree = CreateTree(numpy.array(TrainSet),TrainSet,0.7,0)
+PositiveLabel = "good"
 
+#                                                                       Single Tree
+print("\nSingle Tree Results:")
 
+# Parameters = Training set, Training set, Purity treshold, Tree length limit
+tree = CreateTree(numpy.array(TrainSet),TrainSet,0.8,6)
 
-#RemoveDataCollection= [["A1"],["A2"],["A3","A4"],["A4","A6","A8"],["A5"],["A6"],["A7"],["A8"],["A9"]]
-RemoveDataCollection= [["A1"],["A2"]]
-TP,TN,FP,FN = CreateForest(TrainSet,TrainSet,RemoveDataCollection,0.7,1,"good")
-ShowStatistics(TP,TN,FP,FN)
-
-"""
 print("\nTrain Results:")
-TP,TN,FP,FN = AskQuestionToAll(tree,TrainSet,"good")
+# Parameters = Tree, Question set, Label of Positive data
+TP,TN,FP,FN = AskQuestionToAll(tree,TrainSet,PositiveLabel)
 ShowStatistics(TP,TN,FP,FN)
 
 print("\nTest Results:")
-TP,TN,FP,FN = AskQuestionToAll(tree,TestSet,"good")
+# Parameters = Tree, Question set, Label of Positive data
+TP,TN,FP,FN = AskQuestionToAll(tree,TestSet,PositiveLabel)
 ShowStatistics(TP,TN,FP,FN)
-"""
+
+print("\nPlease Wait...\n")
 
 
+
+
+
+
+#                                                                       Random Forest
+# Parameters = Training set, Tree Count
+RandomForestSet = CreateRandomForestSet(TrainSet,20)
+
+# Parameters = Training set, Test set, Random Forest set, Purity treshold, Tree length limit, Label of Positive data
+TP,TN,FP,FN = CreateForest(TrainSet,TestSet,RandomForestSet,0.9,15,PositiveLabel)
+
+print("\nRandom Forest Results:")
+
+print("\nTest Results:")
+ShowStatistics(TP,TN,FP,FN)
+
+
+
+
+
+
+# For asking single question
+# Parameters = Tree, Question Row
 #print(AskQuestion(tree,TestSet.iloc[0]))
-#pprint(tree)
+
