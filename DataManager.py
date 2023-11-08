@@ -4,7 +4,6 @@ import numpy as numpy
 TrainSet = pd.read_csv("trainSet.csv")
 TestSet = pd.read_csv("testSet.csv")
 
-#TrainSet = TrainSet.drop("Id", axis=1)
 
 def IsNearPure(Data,PurenessThreshold):
 

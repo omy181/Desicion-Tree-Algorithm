@@ -42,7 +42,7 @@ def CreateForest(TrainData,TestData,RemoveDataCollection,PurenessThreshold,Depth
     return TP,TN,FP,FN
 
 
-def CreateRandomForestSet(Data,Count):
+def CreateRandomForestSet(Data,Count,SetSize):
 
     Collection = (Data.iloc[:,:-1]).columns
 
@@ -51,9 +51,9 @@ def CreateRandomForestSet(Data,Count):
     for i in range(Count):
         NewCollection.append([])
 
-        j = math.floor(i/len(Collection))
+        j = math.floor(i/Count)
 
-        for k in range(j+2):
+        for k in range(j+SetSize):
             NewCollection[i%Count].append(Collection[(i%len(Collection) + k)%len(Collection)])
 
     return NewCollection
