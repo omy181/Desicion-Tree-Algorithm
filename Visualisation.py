@@ -1,6 +1,4 @@
 import pydot
-import graphviz.graphs
-import graphviz
 
 # General Tree Visualisation as PNG
 
