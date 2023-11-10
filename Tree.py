@@ -1,7 +1,10 @@
 from DataManager import *
 
+
+# Creates the tree structure recursively as a dictionary
 def CreateTree(Data,WholeData,PurenessThreshold,DepthLimit,Depth = 0):
 
+    # First checks the pureness of the data slice
     ispure,label = IsNearPure(Data,PurenessThreshold)
 
     if ispure or (DepthLimit != 0 and Depth >= DepthLimit):      
@@ -9,14 +12,17 @@ def CreateTree(Data,WholeData,PurenessThreshold,DepthLimit,Depth = 0):
             print("\n\n\nImpurity is too low!\n\n\n") 
         return label
 
+    # finds the possible splits of the data
     possiblesplits = GetPossibleSplits(Data)
 
+    # splits from the lowest overall entropy slice
     LowestEntropyAbove,LowestEntropyBellow,Split_Column,Split_Value = FindLowestEntropySplit(Data,possiblesplits)
 
 
     classes = numpy.unique(Data[:,Split_Column])
 
     
+    # Repeats the procedure to make smaller slices and assigns them to the answers of current node
 
     Condition = ""
 
@@ -47,6 +53,7 @@ def CreateTree(Data,WholeData,PurenessThreshold,DepthLimit,Depth = 0):
 
     return Tree_Structure
 
+ 
 def AskQuestion(Tree_Structure,QuestionData):
 
     question = list(Tree_Structure.keys())[0]
@@ -78,6 +85,7 @@ def AskQuestion(Tree_Structure,QuestionData):
 
     return
 
+# Asks questions and calculates the TP TN FP FN's
 # "Positive" is the desired prediction string, in this case it's "good"
 def AskQuestionToAll(Tree_Structure,Data,Positive):
 
@@ -104,7 +112,7 @@ def AskQuestionToAll(Tree_Structure,Data,Positive):
 
     return TP,TN,FP,FN
 
-
+# Prints Statistics
 def ShowStatistics(TP,TN,FP,FN):
 
         Accuracy = (TP+TN)/(FP+FN+TP+TN)

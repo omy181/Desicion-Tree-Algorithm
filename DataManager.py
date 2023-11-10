@@ -4,7 +4,7 @@ import numpy as numpy
 TrainSet = pd.read_csv("trainSet.csv")
 TestSet = pd.read_csv("testSet.csv")
 
-
+# checks pureness of data slice
 def IsNearPure(Data,PurenessThreshold):
 
     DataLimit = 2
@@ -19,6 +19,7 @@ def IsNearPure(Data,PurenessThreshold):
         pureness = 1
    
     return  pureness > PurenessThreshold , mostfrequent
+
 
 def GetPossibleSplits(Data):
 

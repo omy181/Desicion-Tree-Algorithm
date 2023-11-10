@@ -42,6 +42,7 @@ def CreateForest(TrainData,TestData,RemoveDataCollection,PurenessThreshold,Depth
     return TP,TN,FP,FN
 
 
+# Creates different sets of parameters for the use of different trees
 def CreateRandomForestSet(Data,Count,SetSize):
 
     Collection = (Data.iloc[:,:-1]).columns
